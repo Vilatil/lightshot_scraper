@@ -1,4 +1,5 @@
 import random
+import os
 import re
 import logging
 import string
@@ -12,13 +13,17 @@ headers = {
 URL="https://prnt.sc/"
 
 def main():
-    #logging.basicConfig(level=logging.INFO,filename="links.log")
+    logging.basicConfig(level=logging.WARNING)
+    create_a_folder()
     while True:
-        time.sleep(1)
         proper_link = f'{URL}{create_a_link(5)}'
         get_a_link(proper_link)
     return
 
+def create_a_folder():
+    folder = './images' 
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 def create_a_link(k):
     link=""
     while k >= 0:
@@ -33,24 +38,28 @@ def create_a_link(k):
     return link
 
 def get_a_link(proper_link):
-
     response = requests.get(proper_link, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
     picture = soup.find('img', class_='no-click screenshot-image')
-    print(picture)
+    if not picture:
+        logging.warning("picture not found, gonna try another link")
+        create_a_link(5)
+        return
     light_shot_link = picture.get('src')
-    print(f"{light_shot_link}")
     logging.info(f"{light_shot_link}")
     downloader(light_shot_link)
 
 def downloader(light_shot_link):
+    if not light_shot_link.startswith("https:"):
+        light_shot_link = "https:" + light_shot_link
     response = requests.get(light_shot_link, headers=headers)
     if response.status_code != 200:
-        print(f"Failed to download image!{response.status_code}")
+        logging.error(f"Failed to download image!{response.status_code}")
+        return
     filename = light_shot_link.split('/')[-1]
-    with open(filename, 'wb') as img:
+    with open(f'./images/{filename}', 'wb') as img:
         img.write(response.content)
-    print("Image downloaded successfully!")
+    logging.info("Image downloaded successfully!")
 
 if __name__ == "__main__":
-    print(main())
+    main()
