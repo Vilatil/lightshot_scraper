@@ -1,16 +1,14 @@
 import random
+import re
 import logging
 import string
 import time
 import requests
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-
 from bs4 import BeautifulSoup
 
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
 URL="https://prnt.sc/"
 
 def main():
@@ -18,7 +16,7 @@ def main():
     while True:
         time.sleep(1)
         proper_link = f'{URL}{create_a_link(5)}'
-        download_a_photo(proper_link)
+        get_a_link(proper_link)
     return
 
 def create_a_link(k):
@@ -34,10 +32,8 @@ def create_a_link(k):
         k-=1
     return link
 
-def download_a_photo(proper_link):
-    headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
+def get_a_link(proper_link):
+
     response = requests.get(proper_link, headers=headers)
     soup = BeautifulSoup(response.text, 'lxml')
     picture = soup.find('img', class_='no-click screenshot-image')
@@ -45,29 +41,16 @@ def download_a_photo(proper_link):
     light_shot_link = picture.get('src')
     print(f"{light_shot_link}")
     logging.info(f"{light_shot_link}")
-    if "imgur" in light_shot_link:
-        print(imgur_link(light_shot_link))
-    else:
-        print("nevazhno")
-def imgur_link(light_shot_link):
-    headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
+    downloader(light_shot_link)
+
+def downloader(light_shot_link):
     response = requests.get(light_shot_link, headers=headers)
-    if response.status_code == 200:
-        options = Options()
-        options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36") 
-        driver = webdriver.Chrome(options=options) 
-        driver.get(light_shot_link)
-        picture = WebDriverWait(driver,4).until(
-            EC.presence_of_element_located((By.XPATH, '//img[contains(@class,"image-placeholder")]'))
-        )
-        ready_picture = picture.get_attribute("src")
-        print(ready_picture)
-        if ready_picture:
-            print(ready_picture)
-        driver.quit()
+    if response.status_code != 200:
+        print(f"Failed to download image!{response.status_code}")
+    filename = light_shot_link.split('/')[-1]
+    with open(filename, 'wb') as img:
+        img.write(response.content)
+    print("Image downloaded successfully!")
 
-print(main())
-
-
+if __name__ == "__main__":
+    print(main())
