@@ -10,13 +10,12 @@ from bs4 import BeautifulSoup
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
-URL="https://prnt.sc/"
+URL = "https://prnt.sc/"
 
 def main():
     logging.basicConfig(level=logging.INFO)
     create_a_folder()
     while True:
-        time.sleep(3)
         created_link = URL + create_a_link(5)
         logging.info(f"the created link: {created_link}")
         get_src(created_link)
@@ -26,6 +25,7 @@ def create_a_folder():
     folder = './images' 
     if not os.path.exists(folder):
         os.makedirs(folder)
+
 def create_a_link(k):
     characters = string.ascii_lowercase + string.digits
     link = ''.join(random.choices(characters, k=k))
