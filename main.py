@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 import os
 import re
 import logging
@@ -6,10 +7,12 @@ import string
 import time
 import requests
 from bs4 import BeautifulSoup
-
+import mysql.connector
+from mydb import make_entry, mycursor
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
+
 URL = "https://prnt.sc/"
 
 def main():
@@ -53,6 +56,7 @@ def downloader(light_shot_link):
         logging.error(f"Failed to download image! ERROR:{response.status_code}")
         return
     filename = light_shot_link.split('/')[-1]
+    make_entry(mycursor,filename)
     with open(f'./images/{filename}', 'wb') as img:
         img.write(response.content)
     logging.info("Image was successfully downloaded!")

@@ -1,2 +1,3 @@
 links.log
-/images
+images/
+__pycache__/
