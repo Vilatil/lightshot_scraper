@@ -1,1 +1,20 @@
+name: Deploying a docker container to ECR
+on: push
 
+jobs:
+    job_validation:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+            uses: actions/checkout@v4
+            run: echo "the validating proccess has begun"
+            run: apt-get install docker aws
+            run: docker -v
+            run: aws -v 
+            run: aws sts get-caller-identity
+    job_build_push: 
+        needs: job_validation
+        steps:
+            run: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+            run: docker build -t lightshot_scraper .
+            run: 
