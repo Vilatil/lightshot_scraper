@@ -6,8 +6,8 @@ import logging
 import string
 import time
 import requests
-from bs4 import BeautifulSoup
 import mysql.connector
+from bs4 import BeautifulSoup
 from mydb import make_entry, mycursor
 
 headers = {
