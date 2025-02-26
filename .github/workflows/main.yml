@@ -23,7 +23,7 @@ jobs:
           with:
                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-               aws-region: AWS_REGION
+               aws-region: $AWS_REGION
           
         - name: Login to Amazon ECR
           id: login-ecr
@@ -32,7 +32,7 @@ jobs:
         - name: Validation
           run: | 
             echo "the validating proccess has begun"
-            apt-get install docker aws
+            #apt-get install docker aws
             docker -v
             aws -v 
             aws sts get-caller-identity
