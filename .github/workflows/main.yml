@@ -33,9 +33,9 @@ jobs:
           run: | 
             echo "the validating proccess has begun"
             #apt-get install docker aws
-            docker -v
-            aws -v 
-            aws sts get-caller-identity
+            #docker -v
+            #aws -v 
+            #aws sts get-caller-identity
           
     job_build_push: 
         runs-on: ubuntu-latest
