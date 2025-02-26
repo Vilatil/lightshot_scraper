@@ -2,14 +2,8 @@ name: Deploying a docker container to ECR
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]              
     
-env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID}}
-  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}                        
-  CONTAINER_NAME: ${{ vars.AWS_REGION }}
-
 jobs:
     job_validation:
         runs-on: ubuntu-latest
@@ -43,7 +37,7 @@ jobs:
         steps:
         - name: Pushing the docker container to ECR
           run: |
-            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-            docker build -t $CONTAINER_NAME .
-            docker tag $CONTAINER_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+            aws ecr get-login-password --region ${{ vars.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ vars.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+            docker build -t lightshot_scraper .
+            docker tag lightshot_scraper:latest ${{ vars.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:latest
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:latest
