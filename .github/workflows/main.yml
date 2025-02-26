@@ -3,7 +3,10 @@ name: Deploying a docker container to ECR
 on:
   push:
     branches: [ "main" ]              
-    
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}  # Регион AWS
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}  # ID аккаунта AWS
+  
 jobs:
     job_validation:
         runs-on: ubuntu-latest
@@ -37,7 +40,7 @@ jobs:
         steps:
         - name: Pushing the docker container to ECR
           run: |
-            aws ecr get-login-password --region ${{ vars.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ vars.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+            aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
             docker build -t lightshot_scraper .
-            docker tag lightshot_scraper:latest ${{ vars.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:latest
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:latest
+            docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:latest
+            docker push ${{ env.AWS_REGION }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:latest
