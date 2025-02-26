@@ -5,10 +5,10 @@ on:
     branches: [ "main" ]
     
 env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID}}
-  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}                        
-  CONTAINER_NAME: ${{ vars.AWS_REGION }}
+  AWS_REGION: ${{ env.AWS_REGION }}
+  AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID}}
+  ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}                        
+  CONTAINER_NAME: ${{ env.AWS_REGION }}
 
 jobs:
     job_validation:
