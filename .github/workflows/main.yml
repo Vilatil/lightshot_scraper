@@ -41,8 +41,7 @@ jobs:
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
-            ocker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
-                    - name: ssh-scp-deploy
+            docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
        # - name: ssh connection and deployment
         #  uses: marcodallasanta/ssh-scp-deploy@v1.2.0
          # with:
