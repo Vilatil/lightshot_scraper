@@ -25,15 +25,7 @@ jobs:
         - name: Login to Amazon ECR
           id: login-ecr
           uses: aws-actions/amazon-ecr-login@v1  
-        
-        - name: Validation
-          run: | 
-            echo "the validating proccess has begun"
-            #apt-get install docker aws
-            #docker -v
-            #aws -v 
-            #aws sts get-caller-identity
-            command -v ssh scp
+          
         - name: Pushing the docker container to ECR
           run: |
             aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
@@ -42,22 +34,4 @@ jobs:
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
-       # - name: ssh connection and deployment
-        #  uses: marcodallasanta/ssh-scp-deploy@v1.2.0
-         # with:
-          #  remote: ~/lightshot_scraper/
-           # host: ${{ secrets.HOST_DNS }}
-            #user: ec2-user
-            # User password
-            #password: # optional
-            # Remote server private key
-          #  key: ${{ secrets.EC2_PRIVATE_SSH_KEY }}
-            # Command to run via ssh before scp upload
-           # pre_upload: # optional
-            # Command to run via ssh after scp upload
-            #post_upload: # optional
-            # A set of ssh_option separated by -o
-            #ssh_options: # optional, default is -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-            # Flags to use during scp
-            #scp_options: # optional
-                  
+          
