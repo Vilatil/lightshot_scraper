@@ -8,4 +8,8 @@ jobs:
       environment: production
       steps:
       - name: connect to ssh
-        run: ssh -i <(echo ${{ secrets.EC2_PRIVATE_SSH_KEY }}) ec2-user@${{ secrets.HOST_DNS }}
+        run: |
+          echo ${{ secrets.EC2_PRIVATE_SSH_KEY }} > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem ec2-user@${{ secrets.HOST_DNS }}
+          echo "hello world"
