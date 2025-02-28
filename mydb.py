@@ -1,11 +1,14 @@
 from datetime import datetime
 import mysql.connector
+import os 
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  database="lightshot"
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    database=os.getenv("DB_DATABASE"),
+    password=os.getenv("DB_PASSWORD")
 )
+
 mycursor = mydb.cursor()
 
 def make_entry(mycursor, filename):
