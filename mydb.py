@@ -1,6 +1,6 @@
 from datetime import datetime
 import mysql.connector
-#hd
+
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
