@@ -29,7 +29,12 @@ jobs:
         - name: Pushing the docker container to ECR
           run: |
             aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-            docker build -t lightshot_scraper .
+            docker build \
+            --build-arg DB_HOST=${{ secrets.DB_HOST }} \
+            --build-arg DB_USER=${{ secrets.DB_USER }} \
+            --build-arg DB_DATABASE=${{ secrets.DB_DATABASE }} \
+            --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD}} \
+            -t lightshot_scraper .
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
