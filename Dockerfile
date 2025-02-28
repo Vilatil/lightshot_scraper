@@ -7,6 +7,6 @@ RUN apk add --no-cache libxml2-dev libxslt-dev gcc build-base \
 COPY requirements.txt .
 RUN pip3 install --no-cache -Ur requirements.txt
 COPY . .
-ENTRYPOINT ["/bin/sh"]
+ENTRYPOINT ["top"]
 
 

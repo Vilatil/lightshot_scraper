@@ -20,6 +20,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
     create_a_folder()
     while True:
+        time.sleep(5)
         created_link = URL + create_a_link(5)
         logging.info(f"the created link: {created_link}")
         get_src(created_link)
