@@ -15,5 +15,5 @@ fi
 echo "pulling the new container"
 docker pull AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/ECR_REPOSITORY:main-latest
 docker images
-docker run -d --name CONTAINER_NAME AWS_ACCOUTN_ID.dkr.ecr.AWS_REGION.amazonaws.com/ECR_REPOSITORY:main-latest
+docker run -d --name lightshot -p 3306:3306 --volume images:/ligthshot_scraper/images AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/ECR_REPOSITORY:main-latest
 echo "running the new container
