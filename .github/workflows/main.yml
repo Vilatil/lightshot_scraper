@@ -34,4 +34,14 @@ jobs:
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
+        - name: ssh to ec2 and execute commands 
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.HOST_DNS }}
+            username: ec2-user
+            key: ${{ secrets.EC2_PRIVATE_SSH_KEY }}
+            script: |
+              cd /lightshot_scraper
+              ./deploy.sh
+
           
