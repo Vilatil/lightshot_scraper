@@ -29,7 +29,7 @@ jobs:
         - name: Pushing the docker container to ECR
           run: |
             aws ecr get-login-password --region ${{ env.AWS_REGION }}| docker login --username AWS --password-stdin  ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-            DOCKER_BUILDKIT=1 docker build --cache-from vilatil/lightshot:latest -t lightshot_scraper .
+            docker build -t lightshot_scraper .
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
             docker tag lightshot_scraper:latest ${{ env.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:main-latest
             docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/lightshot_scraper:$GITHUB_SHA
