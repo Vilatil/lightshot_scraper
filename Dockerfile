@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM ghcr.io/astral-sh/uv:python3.12-alpine AS builder
 
 ARG DB_HOST
 ARG DB_USER
@@ -11,13 +11,14 @@ ENV DB_DATABASE=${DB_DATABASE}
 ENV DB_PASSWORD=${DB_PASSWORD}
 
 WORKDIR /lightshot_scraper
-COPY requirements.txt .
-RUN apk add --no-cache libxml2-dev libxslt-dev gcc build-base \
-        && pip3 install --no-cache lxml
-COPY requirements.txt .
-RUN pip3 install --no-cache -Ur requirements.txt
-EXPOSE 3306
+COPY pyproject.toml uv.lock .
+RUN uv sync --locked --no-dev
+
+FROM alpine:3.22
+WORKDIR /lightshot_scraper
+
 COPY . .
-ENTRYPOINT ["top"]
-
-
+COPY --from=builder /lightshot_scraper/.venv /lightshot_scraper/.venv
+ENV PATH="/lightshot_scraper/.venv/bin:$PATH"
+EXPOSE 3306
+CMD ["python", "main.py"]

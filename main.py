@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 import os
+import cloudscraper
 import re
 import logging
 import string
@@ -13,21 +14,21 @@ from mydb import make_entry, mycursor
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
-
 URL = "https://prnt.sc/"
+folder = './images' 
+
 
 def main():
     logging.basicConfig(level=logging.INFO)
     create_a_folder()
     while True:
         time.sleep(5)
-        created_link = URL + create_a_link(5)
+        created_link = URL + create_a_link(7)
         logging.info(f"the created link: {created_link}")
         get_src(created_link)
     return
 
 def create_a_folder():
-    folder = './images' 
     if not os.path.exists(folder):
         os.makedirs(folder)
 
@@ -37,7 +38,8 @@ def create_a_link(k):
     return link
 
 def get_src(created_link):
-    response = requests.get(created_link, headers=headers)
+    response = response.get(created_link, headers=headers)
+    print(response.status_code)
     soup = BeautifulSoup(response.text, 'lxml')
     picture = soup.find('img', class_='no-click screenshot-image')
     if not picture:
@@ -58,11 +60,10 @@ def downloader(light_shot_link):
         logging.error(f"Failed to download image! ERROR:{response.status_code}")
         return
     filename = light_shot_link.split('/')[-1]
-    make_entry(mycursor,filename)
+    # make_entry(mycursor,filename)
     with open(f'./images/{filename}', 'wb') as img:
         img.write(response.content)
     logging.info("Image was successfully downloaded!")
 
 if __name__ == "__main__":
     main()
-#1
